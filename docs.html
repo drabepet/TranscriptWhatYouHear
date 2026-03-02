@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Claude — Help</title>
+  <style>
+    :root {
+      --bg:      #f5f5f7;
+      --card:    #ffffff;
+      --border:  #d2d2d7;
+      --accent:  #0071e3;
+      --accent2: #bf5af2;
+      --text:    #1d1d1f;
+      --muted:   #6e6e73;
+      --tag-bg:  #e8f0fe;
+      --tag-fg:  #1a56db;
+      --red:     #d93025;
+      --green:   #1a8917;
+      --radius:  14px;
+      --shadow:  0 2px 16px rgba(0,0,0,.08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:     #1c1c1e;
+        --card:   #2c2c2e;
+        --border: #3a3a3c;
+        --text:   #f5f5f7;
+        --muted:  #98989d;
+        --tag-bg: #1c2d4a;
+        --tag-fg: #6ea8fe;
+        --red:    #ff453a;
+        --green:  #30d158;
+        --shadow: 0 2px 16px rgba(0,0,0,.4);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 48px 24px 80px;
+    }
+
+    .wrap { max-width: 740px; margin: 0 auto; }
+
+    /* ── Header ── */
+    header { text-align: center; margin-bottom: 52px; }
+    .logo { font-size: 52px; margin-bottom: 12px; }
+    h1 {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 16px;
+      margin-top: 6px;
+    }
+
+    /* ── Quick start ── */
+    .quickstart {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      color: #fff;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow);
+    }
+    .quickstart h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; opacity: .9; }
+    .quickstart ol { padding-left: 20px; }
+    .quickstart li { margin-bottom: 6px; font-size: 15px; }
+    .quickstart kbd {
+      background: rgba(255,255,255,.25);
+      border-radius: 6px;
+      padding: 1px 7px;
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 13px;
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 36px; }
+    section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .card-icon { font-size: 20px; flex-shrink: 0; }
+    .card p { color: var(--muted); font-size: 14px; }
+    .card p + p { margin-top: 6px; }
+
+    /* ── Tag / badge ── */
+    .tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 9px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .tag.red   { background: #ffe5e3; color: var(--red); }
+    .tag.green { background: #e3f5e9; color: var(--green); }
+    @media (prefers-color-scheme: dark) {
+      .tag.red   { background: #3d1a1a; color: var(--red); }
+      .tag.green { background: #0e2d18; color: var(--green); }
+    }
+
+    /* ── Model table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 8px 8px; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr.default-row td { font-weight: 600; }
+    tr.default-row td:first-child::after {
+      content: " ★";
+      color: var(--accent);
+    }
+
+    /* ── Permissions box ── */
+    .perm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .perm-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .perm-card .perm-icon { font-size: 24px; margin-bottom: 8px; }
+    .perm-card strong { display: block; font-size: 14px; margin-bottom: 4px; }
+    .perm-card p { color: var(--muted); font-size: 13px; }
+
+    /* ── Path pill ── */
+    .path {
+      display: inline-block;
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    /* ── Tips ── */
+    .tip {
+      display: flex;
+      gap: 12px;
+      background: var(--card);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .tip-icon { font-size: 18px; flex-shrink: 0; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo">🎙️</div>
+    <h1>Voice Claude</h1>
+    <p>Transcribe your voice and paste it anywhere — privately, on device.</p>
+  </header>
+
+  <!-- ── Quick start ── -->
+  <div class="quickstart">
+    <h2>Quick Start</h2>
+    <ol>
+      <li>The mic icon appears in your menu bar when the app is running.</li>
+      <li>Press <kbd>⌃⌥Space</kbd> to start recording — the icon turns red.</li>
+      <li>Speak naturally. Press <kbd>⌃⌥Space</kbd> again to stop (or wait for silence auto-stop).</li>
+      <li>Your words are transcribed and pasted into the focused window automatically.</li>
+    </ol>
+  </div>
+
+  <!-- ── Permissions ── -->
+  <section>
+    <h2>Required Permissions</h2>
+    <div class="perm-grid">
+      <div class="perm-card">
+        <div class="perm-icon">🎤</div>
+        <strong>Microphone</strong>
+        <p>Captures audio while recording. Without this, the app cannot hear you.</p>
+      </div>
+      <div class="perm-card">
+        <div class="perm-icon">⌨️</div>
+        <strong>Input Monitoring</strong>
+        <p>Detects the global hotkey even when another app is in focus. Required for ⌃⌥Space to work.</p>
+      </div>
+      <div class="perm-card">
+        <div class="perm-icon">♿</div>
+        <strong>Accessibility</strong>
+        <p>Sends Cmd+V (paste) and keystrokes to the focused app after transcription.</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">💡</span>
+      Grant all three in <strong>System Settings → Privacy &amp; Security</strong>.
+      If a permission is missing the relevant feature silently fails.
+    </div>
+  </section>
+
+  <!-- ── Recording ── -->
+  <section>
+    <h2>Recording Settings</h2>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🔀</span>
+        Mode
+      </div>
+      <p><strong>Toggle</strong> — press the hotkey once to start, press again to stop. Great for longer dictation.</p>
+      <p><strong>Push to talk</strong> — hold the hotkey while speaking; release to stop. Works like a walkie-talkie.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🌐</span>
+        Language
+      </div>
+      <p>Choose between <strong>English</strong> and <strong>Czech</strong>. Telling Whisper which language to expect improves speed and accuracy — it won't have to guess.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🧠</span>
+        Model
+        <span class="tag">affects quality &amp; RAM</span>
+      </div>
+      <p>Larger models are more accurate but use more memory and take longer to transcribe. All processing happens locally — nothing is sent to the cloud.</p>
+      <br />
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Disk</th>
+            <th>RAM (int8)</th>
+            <th>Quality</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>tiny</td>    <td>~75 MB</td>   <td>~125 MB</td> <td>Decent</td></tr>
+          <tr><td>base</td>    <td>~145 MB</td>  <td>~200 MB</td> <td>Good</td></tr>
+          <tr class="default-row"><td>small</td>   <td>~461 MB</td>  <td>~500 MB</td> <td>Better — default</td></tr>
+          <tr><td>medium</td>  <td>~1.5 GB</td>  <td>~1.5 GB</td> <td>Very good</td></tr>
+          <tr><td>large-v3</td><td>~3 GB</td>    <td>~3 GB</td>   <td>Near-human</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px">The model is downloaded once on first use and cached locally. Switching model triggers a reload.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🔇</span>
+        Silence Auto-stop
+      </div>
+      <p>Recording stops automatically after you have been silent for the selected duration (5 s / 10 s / 20 s / 30 s). Set to <strong>Off</strong> to disable and stop manually with the hotkey.</p>
+      <p>Pair with <em>Calibrate noise…</em> to make the silence detector ignore background hum — it measures ambient RMS for 2 seconds and sets the threshold automatically.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">⏱️</span>
+        Max Duration
+      </div>
+      <p>Hard upper limit on a single recording (1 min / 2 min / 5 min / 10 min / Unlimited). When reached, recording stops and transcription begins automatically. Protects against accidentally leaving the mic on for hours.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">✨</span>
+        Post-process Text
+      </div>
+      <p>When enabled, the transcribed text is cleaned up before pasting:</p>
+      <p>• Common filler words are removed (<em>um, uh, like, basically, ehm, prostě…</em>).</p>
+      <p>• Multiple spaces are collapsed into one.</p>
+      <p>• The first letter is capitalised.</p>
+    </div>
+  </section>
+
+  <!-- ── Output ── -->
+  <section>
+    <h2>Output Settings</h2>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">📋</span>
+        Output Mode
+      </div>
+      <p><strong>Paste (Cmd+V)</strong> — copies text to the clipboard, then simulates ⌘V in the focused app. Fast and works with rich-text apps. <span class="tag green">Recommended</span></p>
+      <p style="margin-top:8px"><strong>Type (keystroke)</strong> — types the text character by character using System Events. Useful in apps that block pasting. Slower for long texts. Note: Czech diacritics (á, é, ž…) may not type correctly — use Paste mode for those.</p>
+      <p style="margin-top:8px"><strong>Clipboard only</strong> — puts text in the clipboard without pasting. Paste manually with ⌘V whenever you're ready.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">↩️</span>
+        Auto-submit
+      </div>
+      <p>After pasting, automatically presses <strong>Return</strong>. Useful in chat apps like Claude where pressing Enter sends the message. Works with Paste mode only (not Streaming paste).</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">⚡</span>
+        Streaming Paste
+      </div>
+      <p>Text appears segment by segment as Whisper finishes each chunk, rather than waiting for the full transcription. Results feel faster for longer recordings. Not available in Clipboard only mode.</p>
+    </div>
+  </section>
+
+  <!-- ── Hotkey ── -->
+  <section>
+    <h2>Hotkey</h2>
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">⌨️</span>
+        Set Shortcut
+      </div>
+      <p>The default shortcut is <strong>⌃⌥Space</strong> (Control + Option + Space). To change it:</p>
+      <p>1. Click <em>Set shortcut…</em> in the menu.</p>
+      <p>2. Click <strong>OK</strong> in the dialog.</p>
+      <p>3. Press your desired key combination within 8 seconds.</p>
+      <p>The new shortcut is saved to <span class="path">config.json</span> and takes effect immediately.</p>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">⚠️</span>
+      Avoid shortcuts already used by macOS (e.g. ⌘Space for Spotlight, ⌘⇧Space for Finder search). ⌃⌥Space is safe on most systems.
+    </div>
+  </section>
+
+  <!-- ── History ── -->
+  <section>
+    <h2>Recent Transcriptions</h2>
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🕘</span>
+        History
+      </div>
+      <p>The last 5 transcriptions are saved in the <em>Recent transcriptions</em> submenu. Click any entry to copy its full text to the clipboard. Useful if you accidentally closed the window before pasting.</p>
+    </div>
+  </section>
+
+  <!-- ── Files ── -->
+  <section>
+    <h2>Files &amp; Logs</h2>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">📄</span>
+        Log File
+      </div>
+      <p>Every recording, transcription, and error is logged to:</p>
+      <p><span class="path">~/Library/Logs/VoiceClaude.log</span></p>
+      <p>Open it from the menu with <em>Open log</em>, or in the Terminal with <code>tail -f ~/Library/Logs/VoiceClaude.log</code>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">⚙️</span>
+        Config File
+      </div>
+      <p>All settings are stored as JSON in the same folder as the app:</p>
+      <p><span class="path">voice_claude/config.json</span></p>
+      <p>You can edit it manually if needed — changes take effect on next launch.</p>
+    </div>
+  </section>
+
+  <!-- ── Tips ── -->
+  <section>
+    <h2>Tips &amp; Tricks</h2>
+    <div class="tip">
+      <span class="tip-icon">🔉</span>
+      Run <em>Calibrate noise…</em> the first time in your usual environment. It sets the silence threshold based on your ambient noise so auto-stop triggers reliably.
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🚀</span>
+      The model is warmed up silently on startup so your first real transcription isn't slower than the rest.
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🔒</span>
+      Everything runs on your Mac. No audio or text ever leaves your machine.
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🍎</span>
+      On Apple Silicon, Voice Claude automatically uses up to 8 CPU threads for faster transcription.
+    </div>
+    <div class="tip">
+      <span class="tip-icon">📱</span>
+      To launch automatically at login: <strong>System Settings → General → Login Items → (+) → VoiceClaude.app</strong>
+    </div>
+  </section>
+
+  <footer>
+    Voice Claude — local, private, open source.<br />
+    All transcription is performed on your device using OpenAI Whisper via faster-whisper.
+  </footer>
+
+</div>
+</body>
+</html>
