@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# setup.sh — one-time setup for Voice Claude
+# setup.sh — one-time setup for TranscriptWhatYouHear
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV="$SCRIPT_DIR/.venv"
 
 echo "╔══════════════════════════════════════╗"
-echo "║       Voice Claude — Setup           ║"
+echo "║       TranscriptWhatYouHear — Setup           ║"
 echo "╚══════════════════════════════════════╝"
 echo
 
@@ -58,7 +58,7 @@ echo "║                                                                      �
 echo "║  Without Accessibility permission the hotkey ⌘⇧Space won't work.    ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo
-echo "▶  To start Voice Claude, run:"
+echo "▶  To start TranscriptWhatYouHear, run:"
 echo "   ./run.sh"
 echo
 echo "   Or run manually:"

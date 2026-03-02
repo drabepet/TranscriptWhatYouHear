@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Voice Claude — macOS menu bar companion for voice-controlling Claude desktop.
+TranscriptWhatYouHear — macOS menu bar companion for voice-controlling Claude desktop.
 
 Hotkey: configurable (default ⌃⌥Space)
 
@@ -9,7 +9,7 @@ Permissions needed (System Settings → Privacy & Security):
   • Input Monitoring — global hotkey (pynput)
   • Accessibility    — Cmd+V paste / keystroke (osascript)
 
-Log:    ~/Library/Logs/VoiceClaude.log
+Log:    ~/Library/Logs/TranscriptWhatYouHear.log
 Config: <script dir>/config.json
 """
 
@@ -35,7 +35,7 @@ from faster_whisper import WhisperModel
 MODEL_SIZE  = "small"
 SAMPLE_RATE = 16_000
 HOTKEY      = "<ctrl>+<alt>+<space>"
-LOG_PATH    = os.path.expanduser("~/Library/Logs/VoiceClaude.log")
+LOG_PATH    = os.path.expanduser("~/Library/Logs/TranscriptWhatYouHear.log")
 ICON_DIR    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons")
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 DOCS_PATH   = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs.html")
@@ -132,7 +132,7 @@ def _setup_logging() -> logging.Logger:
     fh.setFormatter(fmt)
     ch = logging.StreamHandler()
     ch.setFormatter(fmt)
-    lg = logging.getLogger("voice_claude")
+    lg = logging.getLogger("transcript_what_you_hear")
     lg.setLevel(logging.DEBUG)
     lg.addHandler(fh)
     lg.addHandler(ch)
@@ -210,7 +210,7 @@ def _label_for(options: dict, value) -> str | None:
 
 # ── App ────────────────────────────────────────────────────────────────────────
 
-class VoiceClaudeApp(rumps.App):
+class TranscriptWhatYouHearApp(rumps.App):
 
     def __init__(self):
         idle_icon = ICONS.get("idle")
@@ -481,7 +481,7 @@ class VoiceClaudeApp(rumps.App):
                 self._set_ready()
             self._ui(_apply)
 
-            rumps.notification("Voice Claude", "", f"Shortcut set to {display}")
+            rumps.notification("TranscriptWhatYouHear", "", f"Shortcut set to {display}")
             log.info("Hotkey changed → %s", hk_str)
         else:
             log.warning("Shortcut capture timed out")
@@ -641,7 +641,7 @@ class VoiceClaudeApp(rumps.App):
 
     def _start_recording(self) -> None:
         if self.model is None:
-            rumps.notification("Voice Claude", "", "Model still loading — please wait.")
+            rumps.notification("TranscriptWhatYouHear", "", "Model still loading — please wait.")
             return
 
         self.recording         = True
@@ -860,7 +860,7 @@ class VoiceClaudeApp(rumps.App):
             def make_cb(full_text):
                 def cb(_sender):
                     subprocess.run(["pbcopy"], input=full_text.encode())
-                    rumps.notification("Voice Claude", "", "Copied to clipboard.")
+                    rumps.notification("TranscriptWhatYouHear", "", "Copied to clipboard.")
                 return cb
 
             self._hist_menu.add(rumps.MenuItem(preview, callback=make_cb(t)))
@@ -892,7 +892,7 @@ class VoiceClaudeApp(rumps.App):
                 self._set_ready(f"threshold set to {t}")
             self._ui(_ui_cal)
 
-            rumps.notification("Voice Claude", "",
+            rumps.notification("TranscriptWhatYouHear", "",
                                f"Calibrated. New silence threshold: {threshold}")
             log.info("Calibrated: ambient RMS=%.5f → threshold=%.5f", rms, threshold)
         except Exception as exc:
@@ -927,4 +927,4 @@ class VoiceClaudeApp(rumps.App):
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    VoiceClaudeApp().run()
+    TranscriptWhatYouHearApp().run()

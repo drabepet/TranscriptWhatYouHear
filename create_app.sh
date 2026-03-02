@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# create_app.sh — build VoiceClaude.app and install it to ~/Applications
+# create_app.sh — build TranscriptWhatYouHear.app and install it to ~/Applications
 #
 # Run once after setup.sh. The resulting app can be:
 #   • Double-clicked in Finder
@@ -12,7 +12,7 @@ VENV="$SCRIPT_DIR/.venv"
 PYTHON="$VENV/bin/python"
 MAIN="$SCRIPT_DIR/voice_claude.py"
 
-DEST="$HOME/Applications/VoiceClaude.app"
+DEST="$HOME/Applications/TranscriptWhatYouHear.app"
 CONTENTS="$DEST/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
@@ -24,16 +24,16 @@ if [ ! -f "$PYTHON" ]; then
 fi
 
 # ── Build bundle structure ────────────────────────────────────────────────────
-echo "🔧  Building VoiceClaude.app…"
+echo "🔧  Building TranscriptWhatYouHear.app…"
 rm -rf "$DEST"
 mkdir -p "$MACOS" "$RESOURCES"
 
 # ── Launcher script ───────────────────────────────────────────────────────────
-cat > "$MACOS/VoiceClaude" << LAUNCHER
+cat > "$MACOS/TranscriptWhatYouHear" << LAUNCHER
 #!/bin/bash
 exec "$PYTHON" "$MAIN"
 LAUNCHER
-chmod +x "$MACOS/VoiceClaude"
+chmod +x "$MACOS/TranscriptWhatYouHear"
 
 # ── Info.plist ────────────────────────────────────────────────────────────────
 cat > "$CONTENTS/Info.plist" << 'PLIST'
@@ -43,13 +43,13 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key>
-    <string>VoiceClaude</string>
+    <string>TranscriptWhatYouHear</string>
     <key>CFBundleIdentifier</key>
-    <string>com.voiceclaude.app</string>
+    <string>com.transcriptwhatyouhear.app</string>
     <key>CFBundleName</key>
-    <string>VoiceClaude</string>
+    <string>TranscriptWhatYouHear</string>
     <key>CFBundleDisplayName</key>
-    <string>Voice Claude</string>
+    <string>TranscriptWhatYouHear</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundleShortVersionString</key>
@@ -61,7 +61,7 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
     <true/>
     <!-- Privacy descriptions (shown in permission dialogs) -->
     <key>NSMicrophoneUsageDescription</key>
-    <string>Voice Claude records your voice to transcribe speech into text.</string>
+    <string>TranscriptWhatYouHear records your voice to transcribe speech into text.</string>
 </dict>
 </plist>
 PLIST
@@ -87,11 +87,11 @@ fi
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
-echo "✅  VoiceClaude.app installed to ~/Applications"
+echo "✅  TranscriptWhatYouHear.app installed to ~/Applications"
 echo ""
 echo "Next steps:"
-echo "  • Double-click ~/Applications/VoiceClaude.app to launch"
-echo "  • Or: open ~/Applications/VoiceClaude.app"
+echo "  • Double-click ~/Applications/TranscriptWhatYouHear.app to launch"
+echo "  • Or: open ~/Applications/TranscriptWhatYouHear.app"
 echo ""
 echo "To start automatically on login:"
-echo "  System Settings → General → Login Items → (+) → VoiceClaude.app"
+echo "  System Settings → General → Login Items → (+) → TranscriptWhatYouHear.app"

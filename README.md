@@ -1,4 +1,4 @@
-# 🎙️ Voice Claude
+# 🎙️ TranscriptWhatYouHear
 
 > macOS menu bar app that records your voice, transcribes it locally with OpenAI Whisper (no cloud), and pastes the text into any app. Hotkey-driven, private by design, Apple Silicon optimized. Built with Claude.
 
@@ -133,13 +133,13 @@ The last 5 transcriptions are saved in the **Recent transcriptions** submenu. Cl
 
 | File | Location |
 |---|---|
-| Log | `~/Library/Logs/VoiceClaude.log` |
+| Log | `~/Library/Logs/TranscriptWhatYouHear.log` |
 | Config | `voice_claude/config.json` |
 
 Open the log from the menu with **Open log**, or in Terminal:
 
 ```bash
-tail -f ~/Library/Logs/VoiceClaude.log
+tail -f ~/Library/Logs/TranscriptWhatYouHear.log
 ```
 
 All settings are stored as JSON in `config.json`. You can edit it manually — changes take effect on next launch.
@@ -152,7 +152,7 @@ All settings are stored as JSON in `config.json`. You can edit it manually — c
 - 🚀 **Warm startup** — the model is warmed up silently on launch so your first transcription isn't slower than the rest.
 - 🔒 **Fully private** — no audio or text ever leaves your machine.
 - 🍎 **Apple Silicon** — automatically uses up to 8 CPU threads for faster transcription.
-- 📱 **Launch at login** — System Settings → General → Login Items → (+) → VoiceClaude.app
+- 📱 **Launch at login** — System Settings → General → Login Items → (+) → TranscriptWhatYouHear.app
 
 ---
 
