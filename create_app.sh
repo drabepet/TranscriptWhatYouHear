@@ -1,39 +1,42 @@
 #!/usr/bin/env bash
 # create_app.sh — build TranscriptWhatYouHear.app and install it to ~/Applications
 #
-# Run once after setup.sh. The resulting app can be:
+# The resulting app can be:
 #   • Double-clicked in Finder
 #   • Added to Login Items (System Settings → General → Login Items)
-#   • Dragged to the Dock
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-VENV="$SCRIPT_DIR/.venv"
-PYTHON="$VENV/bin/python"
-MAIN="$SCRIPT_DIR/voice_claude.py"
 
 DEST="$HOME/Applications/TranscriptWhatYouHear.app"
 CONTENTS="$DEST/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 
-# ── Sanity checks ─────────────────────────────────────────────────────────────
-if [ ! -f "$PYTHON" ]; then
-    echo "❌  Virtual environment not found. Run ./setup.sh first."
+# ── Build Swift binary ───────────────────────────────────────────────────────
+echo "🔨  Building TranscriptWhatYouHear (Swift)…"
+cd "$SCRIPT_DIR"
+swift build -c release 2>&1 | tail -5
+
+BINARY="$SCRIPT_DIR/.build/release/TranscriptWhatYouHear"
+if [ ! -f "$BINARY" ]; then
+    echo "❌  Build failed — binary not found"
     exit 1
 fi
 
 # ── Build bundle structure ────────────────────────────────────────────────────
-echo "🔧  Building TranscriptWhatYouHear.app…"
+echo "📦  Creating .app bundle…"
 rm -rf "$DEST"
 mkdir -p "$MACOS" "$RESOURCES"
 
-# ── Launcher script ───────────────────────────────────────────────────────────
-cat > "$MACOS/TranscriptWhatYouHear" << LAUNCHER
-#!/bin/bash
-exec "$PYTHON" "$MAIN"
-LAUNCHER
+# Copy binary
+cp "$BINARY" "$MACOS/TranscriptWhatYouHear"
 chmod +x "$MACOS/TranscriptWhatYouHear"
+
+# Copy docs.html into Resources
+if [ -f "$SCRIPT_DIR/docs.html" ]; then
+    cp "$SCRIPT_DIR/docs.html" "$RESOURCES/docs.html"
+fi
 
 # ── Info.plist ────────────────────────────────────────────────────────────────
 cat > "$CONTENTS/Info.plist" << 'PLIST'
@@ -51,9 +54,9 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
     <key>CFBundleDisplayName</key>
     <string>TranscriptWhatYouHear</string>
     <key>CFBundleVersion</key>
-    <string>1.0</string>
+    <string>2.0</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
+    <string>2.0</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <!-- Hide from Dock — menu bar only app -->
@@ -66,7 +69,7 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
 </plist>
 PLIST
 
-# ── Copy mic icon as app icon (icns) if sips is available ────────────────────
+# ── App icon (optional — uses system mic icon if this fails) ─────────────────
 IDLE_PNG="$SCRIPT_DIR/icons/idleTemplate.png"
 if [ -f "$IDLE_PNG" ] && command -v sips &>/dev/null; then
     ICONSET="$RESOURCES/AppIcon.iconset"
@@ -79,8 +82,6 @@ if [ -f "$IDLE_PNG" ] && command -v sips &>/dev/null; then
     iconutil -c icns "$ICONSET" -o "$RESOURCES/AppIcon.icns" 2>/dev/null && \
         echo "  ✅  App icon generated" || echo "  ⚠️   iconutil failed — app will use default icon"
     rm -rf "$ICONSET"
-
-    # Tell the bundle which icon to use
     /usr/libexec/PlistBuddy -c \
         "Add :CFBundleIconFile string AppIcon" "$CONTENTS/Info.plist" 2>/dev/null || true
 fi

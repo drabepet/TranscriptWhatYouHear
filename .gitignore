@@ -1,4 +1,8 @@
-# Python
+# Swift
+.build/
+.swiftpm/
+
+# Python (legacy)
 .venv/
 __pycache__/
 *.pyc
@@ -6,7 +10,6 @@ __pycache__/
 *.pyd
 *.egg-info/
 dist/
-build/
 
 # macOS
 .DS_Store

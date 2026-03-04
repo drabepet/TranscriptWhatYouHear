@@ -1,8 +1,0 @@
-# Voice Claude dependencies
-rumps>=0.4.0          # macOS menu bar app framework
-sounddevice>=0.4.6    # cross-platform audio I/O (uses PortAudio)
-soundfile>=0.12.1     # reading/writing WAV files
-numpy>=1.24.0         # audio array manipulation
-faster-whisper>=1.0.0 # fast local Whisper transcription (CTranslate2 backend)
-pynput>=1.7.6         # global hotkey listener
-Pillow>=10.0.0        # icon generation
