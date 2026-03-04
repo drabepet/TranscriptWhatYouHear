@@ -7,8 +7,8 @@
 ## Quick Start
 
 1. The mic icon appears in your menu bar when the app is running.
-2. Press **⌃⌥Space** to start recording — the icon turns red.
-3. Speak naturally. Press **⌃⌥Space** again to stop (or wait for silence auto-stop).
+2. Press **⌃⌥Space** to start recording — the icon turns red and you hear a beep.
+3. Speak naturally. Press **⌃⌥Space** again to stop (or wait for silence auto-stop). A lower beep confirms the stop.
 4. Your words are transcribed and pasted into the focused window automatically.
 
 ---
@@ -37,7 +37,10 @@ Grant in **System Settings → Privacy & Security**:
 | Permission | Purpose |
 |---|---|
 | Microphone | Captures audio while recording |
+| Input Monitoring | Detects the global hotkey even when another app is in focus |
 | Accessibility | Sends Cmd+V (paste) and keystrokes to the focused app after transcription |
+
+> **Important:** Without Accessibility permission, transcription still works but the text will only be placed in the clipboard — it won't be pasted automatically. The app prompts for Accessibility access on first launch.
 
 ---
 
@@ -93,6 +96,16 @@ When enabled: removes filler words (*um, uh, like, basically, ehm, jako…*), co
 
 ---
 
+## Audio Feedback
+
+Short beep sounds confirm recording state changes:
+
+- **880 Hz beep** — recording started
+- **550 Hz beep** — recording stopped
+- **1100 Hz beep** — transcription complete
+
+---
+
 ## Hotkey
 
 Default: **⌃⌥Space** (Control + Option + Space). To change:
@@ -105,6 +118,38 @@ Default: **⌃⌥Space** (Control + Option + Space). To change:
 ## Recent Transcriptions
 
 The last 5 transcriptions are saved in the **Recent transcriptions** submenu. Click any entry to copy it to the clipboard.
+
+---
+
+## Running Tests
+
+The project includes 38 automated tests covering PostProcessor, AppConfig, HotkeyManager, AudioRecorder RMS, OutputManager clipboard, and ConfigManager file I/O. No Xcode required:
+
+```bash
+swift run TestRunner
+```
+
+---
+
+## Project Structure
+
+```
+Sources/
+  TranscriptLib/          # Core library (all business logic)
+    AppDelegate.swift     # Menu bar UI, state machine, coordinates managers
+    AudioRecorder.swift   # AVAudioEngine mic capture, silence detection
+    BeepPlayer.swift      # Sine-wave audio feedback
+    ConfigManager.swift   # JSON config load/save
+    HotkeyManager.swift   # Global hotkey via HotKey/Carbon
+    Log.swift             # File + stderr logger
+    OutputManager.swift   # Paste (CGEvent + AppleScript fallback), type, clipboard
+    PostProcessor.swift   # Filler word removal, text cleanup
+    WhisperManager.swift  # whisper.cpp model download, loading, transcription
+  TranscriptWhatYouHear/
+    main.swift            # Entry point
+Tests/
+  TestRunner/main.swift   # 38 automated tests (no Xcode needed)
+```
 
 ---
 
@@ -124,10 +169,10 @@ The last 5 transcriptions are saved in the **Recent transcriptions** submenu. Cl
 |---|---|
 | Language | Swift (native macOS) |
 | Menu bar UI | AppKit (NSStatusItem) |
-| Transcription | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) |
-| Audio capture | AVAudioEngine |
+| Transcription | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) via SPM |
+| Audio capture | AVAudioEngine (16 kHz mono, vDSP RMS silence detection) |
 | Global hotkey | [HotKey](https://github.com/soffes/HotKey) (Carbon) |
-| Paste/Type | CoreGraphics (CGEvent) |
+| Paste/Type | CoreGraphics (CGEvent) with AppleScript fallback |
 
 ---
 

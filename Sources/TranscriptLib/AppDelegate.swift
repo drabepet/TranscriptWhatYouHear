@@ -1,7 +1,7 @@
 import AppKit
 import UserNotifications
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+public final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - UI
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
@@ -66,7 +66,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - App Lifecycle
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    public func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem.button {
@@ -91,6 +91,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.onKeyUp = { [weak self] in
             DispatchQueue.main.async { self?.onHotkeyUp() }
+        }
+
+        // Check Accessibility permission (needed for paste/type simulation)
+        if !OutputManager.checkAccessibility() {
+            Log.warning("Accessibility permission not granted — paste will not work until enabled in System Settings")
         }
 
         // Start
@@ -261,11 +266,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             img?.isTemplate = true
             button.image = img
         case .recording:
-            let img = NSImage(systemSymbolName: "record.circle.fill", accessibilityDescription: nil)
+            let config = NSImage.SymbolConfiguration(hierarchicalColor: .systemRed)
+            let img = NSImage(systemSymbolName: "record.circle.fill", accessibilityDescription: nil)?
+                .withSymbolConfiguration(config)
             img?.isTemplate = false
-            // Tint red
             button.image = img
-            button.contentTintColor = .systemRed
+            button.contentTintColor = nil
         case .processing:
             let img = NSImage(systemSymbolName: "ellipsis.circle", accessibilityDescription: nil)
             img?.isTemplate = true

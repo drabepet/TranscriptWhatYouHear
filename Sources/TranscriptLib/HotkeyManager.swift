@@ -3,15 +3,17 @@ import Carbon
 import HotKey
 
 /// Manages global hotkey registration and shortcut capture.
-final class HotkeyManager {
+public final class HotkeyManager {
     private var hotKey: HotKey?
     private var globalMonitor: Any?
 
-    var onKeyDown: (() -> Void)?
-    var onKeyUp: (() -> Void)?
+    public var onKeyDown: (() -> Void)?
+    public var onKeyUp: (() -> Void)?
+
+    public init() {}
 
     /// Register a hotkey from config string like "ctrl+option+space".
-    func register(shortcut: String) {
+    public func register(shortcut: String) {
         hotKey = nil  // Unregister old
 
         let (key, modifiers) = Self.parse(shortcut)
@@ -27,12 +29,12 @@ final class HotkeyManager {
         Log.info("Hotkey registered: \(shortcut)")
     }
 
-    func unregister() {
+    public func unregister() {
         hotKey = nil
     }
 
     /// Capture the next key combination pressed. Calls back with the shortcut string.
-    func captureShortcut(timeout: TimeInterval = 8.0, completion: @escaping (String?) -> Void) {
+    public func captureShortcut(timeout: TimeInterval = 8.0, completion: @escaping (String?) -> Void) {
         // Temporarily unregister current hotkey
         let savedHotKey = hotKey
         hotKey = nil
@@ -72,7 +74,7 @@ final class HotkeyManager {
 
     // MARK: - Display
 
-    static func displayString(for shortcut: String) -> String {
+    public static func displayString(for shortcut: String) -> String {
         let parts = shortcut.lowercased().split(separator: "+").map(String.init)
         var symbols: [String] = []
         for part in parts {
@@ -90,7 +92,7 @@ final class HotkeyManager {
 
     // MARK: - Parse / Encode
 
-    static func parse(_ shortcut: String) -> (Key?, NSEvent.ModifierFlags) {
+    public static func parse(_ shortcut: String) -> (Key?, NSEvent.ModifierFlags) {
         let parts = shortcut.lowercased().split(separator: "+").map { $0.trimmingCharacters(in: .whitespaces) }
         var mods: NSEvent.ModifierFlags = []
         var keyPart: String?
@@ -110,7 +112,7 @@ final class HotkeyManager {
         return (key, mods)
     }
 
-    static func encode(keyCode: UInt16, modifiers: NSEvent.ModifierFlags) -> String {
+    public static func encode(keyCode: UInt16, modifiers: NSEvent.ModifierFlags) -> String {
         var parts: [String] = []
         if modifiers.contains(.control) { parts.append("ctrl") }
         if modifiers.contains(.option) { parts.append("option") }

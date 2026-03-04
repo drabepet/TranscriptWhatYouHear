@@ -1,21 +1,30 @@
 import AVFoundation
 
 /// Plays short sine-wave beeps for audio feedback (start, stop, complete).
-final class BeepPlayer {
+public final class BeepPlayer {
     private let engine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
     private let sampleRate: Double = 44_100
 
-    init() {
+    public init() {
         engine.attach(playerNode)
         let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
         engine.connect(playerNode, to: engine.mainMixerNode, format: format)
-        try? engine.start()
-        playerNode.play()
+    }
+
+    private func ensureRunning() {
+        if !engine.isRunning {
+            try? engine.start()
+        }
+        if !playerNode.isPlaying {
+            playerNode.play()
+        }
     }
 
     /// Play a sine-wave beep at the given frequency and duration.
-    func play(frequency: Float, duration: Float = 0.09) {
+    public func play(frequency: Float, duration: Float = 0.09) {
+        ensureRunning()
+
         let frameCount = Int(Float(sampleRate) * duration)
         guard let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1),
               let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(frameCount))
@@ -38,9 +47,9 @@ final class BeepPlayer {
     }
 
     /// 880 Hz — recording started
-    func beepStart() { play(frequency: 880) }
+    public func beepStart() { play(frequency: 880) }
     /// 550 Hz — recording stopped
-    func beepStop() { play(frequency: 550) }
+    public func beepStop() { play(frequency: 550) }
     /// 1100 Hz, short — transcription complete
-    func beepDone() { play(frequency: 1100, duration: 0.06) }
+    public func beepDone() { play(frequency: 1100, duration: 0.06) }
 }

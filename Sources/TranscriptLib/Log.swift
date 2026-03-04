@@ -2,7 +2,7 @@ import Foundation
 import os
 
 /// Central logger — writes to ~/Library/Logs/TranscriptWhatYouHear.log and stderr.
-enum Log {
+public enum Log {
     private static let logPath: String = {
         let dir = NSHomeDirectory() + "/Library/Logs"
         try? FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
@@ -22,10 +22,10 @@ enum Log {
 
     private static let lock = NSLock()
 
-    static func info(_ msg: String) { write("INFO    ", msg) }
-    static func debug(_ msg: String) { write("DEBUG   ", msg) }
-    static func warning(_ msg: String) { write("WARNING ", msg) }
-    static func error(_ msg: String) { write("ERROR   ", msg) }
+    public static func info(_ msg: String) { write("INFO    ", msg) }
+    public static func debug(_ msg: String) { write("DEBUG   ", msg) }
+    public static func warning(_ msg: String) { write("WARNING ", msg) }
+    public static func error(_ msg: String) { write("ERROR   ", msg) }
 
     private static func write(_ level: String, _ msg: String) {
         let ts = dateFormatter.string(from: Date())

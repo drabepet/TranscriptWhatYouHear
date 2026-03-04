@@ -2,10 +2,10 @@ import Foundation
 import whisper
 
 /// Manages whisper.cpp model loading, downloading, and transcription.
-final class WhisperManager {
+public final class WhisperManager {
     private var ctx: OpaquePointer?
-    private(set) var currentModel: String = ""
-    private(set) var isLoading = false
+    public private(set) var currentModel: String = ""
+    public private(set) var isLoading = false
 
     private static let modelsDir: URL = {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -14,7 +14,9 @@ final class WhisperManager {
         return dir
     }()
 
-    var onProgress: ((String) -> Void)?
+    public var onProgress: ((String) -> Void)?
+
+    public init() {}
 
     deinit {
         if let ctx = ctx { whisper_free(ctx) }
@@ -22,16 +24,16 @@ final class WhisperManager {
 
     // MARK: - Model Management
 
-    func modelPath(for size: String) -> URL {
+    public func modelPath(for size: String) -> URL {
         Self.modelsDir.appendingPathComponent("ggml-\(size).bin")
     }
 
-    func isModelDownloaded(_ size: String) -> Bool {
+    public func isModelDownloaded(_ size: String) -> Bool {
         FileManager.default.fileExists(atPath: modelPath(for: size).path)
     }
 
     /// Download model if needed, then load it. Calls back on main thread.
-    func loadModel(_ size: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    public func loadModel(_ size: String, completion: @escaping (Result<Void, Error>) -> Void) {
         isLoading = true
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -69,14 +71,14 @@ final class WhisperManager {
 
     // MARK: - Transcription
 
-    struct TranscriptionResult {
-        let text: String
-        let segments: [String]
-        let language: String
+    public struct TranscriptionResult {
+        public let text: String
+        public let segments: [String]
+        public let language: String
     }
 
     /// Transcribe Float32 PCM samples at 16 kHz.
-    func transcribe(samples: [Float], language: String,
+    public func transcribe(samples: [Float], language: String,
                     streaming: Bool = false,
                     onSegment: ((String) -> Void)? = nil) -> TranscriptionResult? {
         guard let ctx = ctx else { return nil }

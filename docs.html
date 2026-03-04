@@ -222,8 +222,8 @@
     <h2>Quick Start</h2>
     <ol>
       <li>The mic icon appears in your menu bar when the app is running.</li>
-      <li>Press <kbd>⌃⌥Space</kbd> to start recording — the icon turns red.</li>
-      <li>Speak naturally. Press <kbd>⌃⌥Space</kbd> again to stop (or wait for silence auto-stop).</li>
+      <li>Press <kbd>⌃⌥Space</kbd> to start recording — the icon turns red and you hear a beep.</li>
+      <li>Speak naturally. Press <kbd>⌃⌥Space</kbd> again to stop (a lower beep confirms), or wait for silence auto-stop.</li>
       <li>Your words are transcribed and pasted into the focused window automatically.</li>
     </ol>
   </div>
@@ -250,8 +250,11 @@
     </div>
     <div class="tip" style="margin-top:14px">
       <span class="tip-icon">💡</span>
-      Grant all three in <strong>System Settings → Privacy &amp; Security</strong>.
-      If a permission is missing the relevant feature silently fails.
+      Grant all three in <strong>System Settings → Privacy &amp; Security</strong>. The app prompts for Accessibility on first launch.
+    </div>
+    <div class="tip">
+      <span class="tip-icon">⚠️</span>
+      Without <strong>Accessibility</strong> permission, transcription still works but the text stays in the clipboard — it won't be auto-pasted. If pasting stops working after an app update, re-add the app in Accessibility settings.
     </div>
   </section>
 
@@ -415,9 +418,9 @@
         <span class="card-icon">⚙️</span>
         Config File
       </div>
-      <p>All settings are stored as JSON in the same folder as the app:</p>
-      <p><span class="path">voice_claude/config.json</span></p>
-      <p>You can edit it manually if needed — changes take effect on next launch.</p>
+      <p>All settings are stored as JSON in Application Support:</p>
+      <p><span class="path">~/Library/Application Support/TranscriptWhatYouHear/config.json</span></p>
+      <p>You can edit it manually if needed — changes take effect on next launch. Missing keys are filled with defaults automatically.</p>
     </div>
   </section>
 
@@ -446,9 +449,25 @@
     </div>
   </section>
 
+  <!-- ── Audio Feedback ── -->
+  <section>
+    <h2>Audio Feedback</h2>
+    <div class="card">
+      <div class="card-title">
+        <span class="card-icon">🔔</span>
+        Beep Sounds
+      </div>
+      <p>Short sine-wave beeps confirm recording state changes:</p>
+      <p><strong>880 Hz</strong> — recording started</p>
+      <p><strong>550 Hz</strong> — recording stopped, transcription begins</p>
+      <p><strong>1100 Hz</strong> — transcription complete</p>
+      <p style="margin-top:6px">Beeps play through your default audio output device.</p>
+    </div>
+  </section>
+
   <footer>
     TranscriptWhatYouHear — local, private, open source.<br />
-    All transcription is performed on your device using OpenAI Whisper via faster-whisper.
+    All transcription is performed on your device using <a href="https://github.com/ggerganov/whisper.cpp" style="color:var(--accent)">whisper.cpp</a>. Built with <a href="https://claude.ai" style="color:var(--accent)">Claude</a>.
   </footer>
 
 </div>

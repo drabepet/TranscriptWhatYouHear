@@ -9,8 +9,8 @@ let package = Package(
         .package(url: "https://github.com/soffes/HotKey", from: "0.2.0"),
     ],
     targets: [
-        .executableTarget(
-            name: "TranscriptWhatYouHear",
+        .target(
+            name: "TranscriptLib",
             dependencies: [
                 .product(name: "whisper", package: "whisper.spm"),
                 "HotKey",
@@ -20,6 +20,15 @@ let package = Package(
                 .linkedFramework("CoreGraphics"),
                 .linkedFramework("Carbon"),
             ]
+        ),
+        .executableTarget(
+            name: "TranscriptWhatYouHear",
+            dependencies: ["TranscriptLib"]
+        ),
+        .executableTarget(
+            name: "TestRunner",
+            dependencies: ["TranscriptLib"],
+            path: "Tests/TestRunner"
         ),
     ]
 )

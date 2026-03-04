@@ -2,22 +2,24 @@ import AVFoundation
 import Accelerate
 
 /// Records audio from the microphone, detects silence, returns Float32 PCM at 16 kHz mono.
-final class AudioRecorder {
-    static let sampleRate: Double = 16_000
+public final class AudioRecorder {
+    public static let sampleRate: Double = 16_000
     private let engine = AVAudioEngine()
     private var buffer: [Float] = []
     private let bufferLock = NSLock()
 
     private var speechDetected = false
     private var lastSpeechTime: TimeInterval = 0
-    var onAutoStop: (() -> Void)?
+    public var onAutoStop: (() -> Void)?
 
-    var silenceThreshold: Double = 0.01
-    var silenceTimeout: Double = 10.0
+    public var silenceThreshold: Double = 0.01
+    public var silenceTimeout: Double = 10.0
 
-    var isRecording: Bool { engine.isRunning }
+    public var isRecording: Bool { engine.isRunning }
 
-    func start() throws {
+    public init() {}
+
+    public func start() throws {
         buffer.removeAll()
         speechDetected = false
         lastSpeechTime = Date.timeIntervalSinceReferenceDate
@@ -57,7 +59,7 @@ final class AudioRecorder {
         try engine.start()
     }
 
-    func stop() -> [Float] {
+    public func stop() -> [Float] {
         engine.inputNode.removeTap(onBus: 0)
         engine.stop()
         bufferLock.lock()
@@ -67,7 +69,7 @@ final class AudioRecorder {
     }
 
     /// Record 2 seconds of ambient noise and return RMS.
-    func calibrate(completion: @escaping (Double) -> Void) {
+    public func calibrate(completion: @escaping (Double) -> Void) {
         var samples: [Float] = []
         let inputNode = engine.inputNode
         let hardwareFormat = inputNode.inputFormat(forBus: 0)
@@ -142,15 +144,15 @@ final class AudioRecorder {
         bufferLock.unlock()
     }
 
-    static func computeRMS(_ samples: [Float]) -> Double {
+    public static func computeRMS(_ samples: [Float]) -> Double {
         guard !samples.isEmpty else { return 0 }
         var meanSquare: Float = 0
         vDSP_measqv(samples, 1, &meanSquare, vDSP_Length(samples.count))
         return Double(sqrtf(meanSquare))
     }
 
-    enum RecorderError: LocalizedError {
+    public enum RecorderError: LocalizedError {
         case noInputDevice
-        var errorDescription: String? { "No audio input device found" }
+        public var errorDescription: String? { "No audio input device found" }
     }
 }

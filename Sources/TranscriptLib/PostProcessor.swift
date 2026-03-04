@@ -1,6 +1,6 @@
 import Foundation
 
-enum PostProcessor {
+public enum PostProcessor {
     private static let fillerWords: [String] = [
         // Sorted longest-first so multi-word phrases are matched before their parts
         "you know", "i mean", "kind of", "sort of",
@@ -15,7 +15,7 @@ enum PostProcessor {
         "jo", "no",
     ]
 
-    static func process(_ text: String) -> String {
+    public static func process(_ text: String) -> String {
         var result = text
         for word in fillerWords {
             let pattern = "(?i)\\b\(NSRegularExpression.escapedPattern(for: word))\\b"
